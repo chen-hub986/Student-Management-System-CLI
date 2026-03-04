@@ -73,7 +73,7 @@ def test_get_avg_score(students_manager):
     students_manager.add_student("David", [60, 65, 70])
     students_manager.add_student("Alice", [90, 95, 85])
     students_manager.add_student("Charlie", [80, 85, 90])
-    avg_score = students_manager.get_avg_score()
+    avg_score = students_manager.get_class_statistics()
     assert avg_score["overall_average"] == (90.0 + 85.0 + 65.0) / 3
     assert avg_score["max_student"] == "Alice"
     assert avg_score["min_student"] == "David"

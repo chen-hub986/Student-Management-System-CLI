@@ -65,16 +65,29 @@ class StudentManager:
         self.logger.log_info(f"成功修改學生 {name} 的資料，平均成績為 {student.average_score:.2f}")
         return student  # 返回修改後的學生資料
 
-    def get_avg_score(self) -> dict:
+    def get_class_statistics(self) -> dict:
         self._validate_empty_student_list()
         
         averages = [student.average_score for student in self.students]
-        overall_average = sum(averages) / len(averages)
+        total_students = len(averages)
+
+        overall_average = sum(averages) / total_students
 
         student_average = list(zip([student.name for student in self.students], averages))
         
         max_student, max_average_score = max(student_average, key=lambda x: x[1])
         min_student, min_average_score = min(student_average, key=lambda x: x[1])
+
+        passing_count = sum(1 for score in averages if score >= 60)
+        passing_rate = (passing_count / total_students) * 100
+
+        sorted_averages = sorted(averages)
+        mid_index = total_students // 2
+
+        if total_students % 2 == 0:
+            median = (sorted_averages[mid_index - 1] + sorted_averages[mid_index]) / 2
+        else:
+            median = sorted_averages[mid_index]
         
         return {
             "student_averages": student_average,
@@ -82,7 +95,10 @@ class StudentManager:
             "max_student": max_student,
             "max_average_score": max_average_score,
             "min_student": min_student,
-            "min_average_score": min_average_score
+            "min_average_score": min_average_score,
+            "total_students" : total_students,
+            "median" : median,
+            "passing_rate" : passing_rate
         }
         
     def get_ranking(self) -> List[Student]:
@@ -96,5 +112,6 @@ class StudentManager:
                 if query in student.name.lower()
             ]
     
-    def filter_student(self, criteria: Callable[[Student], bool]) ->List[Student]:
+    def filter_students(self, criteria: Callable[[Student], bool]) ->List[Student]:
         return list(filter(criteria, self.students))
+    
