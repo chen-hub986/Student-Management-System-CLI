@@ -82,11 +82,27 @@ def test_get_ranking(students_manager):
     students_manager.add_student("David", [60, 65, 70])  # Average: 65
     students_manager.add_student("Alice", [90, 95, 85])  # Average: 90
     students_manager.add_student("Charlie", [80, 85, 90]) # Average: 85
-    ranking = students_manager.get_ranking()
+    
+    ranking = students_manager.get_sorted_students(
+        sort_key=lambda s: s.average_score, 
+        reverse=True
+    )
     assert ranking[0].name == "Alice"
     assert ranking[1].name == "Charlie"
     assert ranking[2].name == "David"
 
 def test_get_ranking_empty(students_manager):
     with pytest.raises(emptyStudentListException):
-        students_manager.get_ranking()
+        students_manager.get_sorted_students(sort_key=lambda s: s.average_score)
+
+def test_get_sorted_students_by_name(students_manager):
+    students_manager.add_student("Zac", [60, 60, 60])
+    students_manager.add_student("Bob", [70, 70, 70])
+    students_manager.add_student("Alice", [80, 80, 80])
+    
+    # 測試 A -> Z 排序
+    result = students_manager.get_sorted_students(sort_key=lambda s: s.name.lower(), reverse=False)
+    
+    assert result[0].name == "Alice"
+    assert result[1].name == "Bob"
+    assert result[2].name == "Zac"

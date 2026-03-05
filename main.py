@@ -32,12 +32,37 @@ def show_students(students_manager):
         print(f"{student.name} - 平均成績: {student.average_score:.2f}")
 
 @MenuErrorHandler
-def show_ranking(students_manager):
-    ranking = students_manager.get_ranking()
-    print("\n成績排名:")
+def sorting_menu(students_manager):
+    while True:
+            print("\n請選擇:")
+            print("1. 依平均成績排序 (高 -> 低) ")
+            print("2. 依平均成績排序 (低 -> 高) ")
+            print("3. 依學生姓名排序 (A -> Z) ")
+            print("4. 依學生姓名排序 (Z -> A) ")
+            print("5. 返回")
+            choice = input("請輸入選項 (1-5) :")
+            
+            if choice == '1':
+                sorted_list = students_manager.get_sorted_students(sort_key = lambda s: s.average_score, reverse = True)
+                sort_title = "成績排序 (高 -> 低)"
+            elif choice == '2':
+                sorted_list = students_manager.get_sorted_students(sort_key = lambda s: s.average_score, reverse = False)
+                sort_title = "成績排序 (低 -> 高)"
+            elif choice == '3':
+                sorted_list = students_manager.get_sorted_students(sort_key = lambda s: s.name.lower(), reverse = False)
+                sort_title = "姓名排序 (A -> Z)"
+            elif choice == '4':
+                sorted_list = students_manager.get_sorted_students(sort_key = lambda s: s.name.lower(), reverse = True)
+                sort_title = "姓名排序 (Z -> A)"
+            elif choice == '5':
+                break
+            else:
+                print("無效的選項，請重新輸入！")
+                continue
 
-    for rank, student in enumerate(ranking, 1):
-        print(f"{rank}. {student.name} - 平均成績: {student.average_score:.2f}")
+            print(f"\n{sort_title}結果：")
+            for rank, student in enumerate(sorted_list, 1):
+                print(f"{rank:>2}. {student.name:<10} - 平均成績: {student.average_score:>6.2f}")
 
 @MenuErrorHandler
 def delete_student(students_manager):
@@ -180,7 +205,7 @@ def main():
     while True:
         print("\n選擇操作：")
         print("1. 添加學生資料")
-        print("2. 顯示成績排名")
+        print("2. 排序成績排名選單")
         print("3. 刪除學生資料")
         print("4. 修改學生資料")
         print("5. 列出優等生或搜尋學生")
@@ -191,7 +216,7 @@ def main():
         if choice == '1':
             student_add(students_manager)
         elif choice == '2':
-            show_ranking(students_manager)
+            sorting_menu(students_manager)
         elif choice == '3':
             delete_student(students_manager)
         elif choice == '4':

@@ -1,6 +1,6 @@
 from scr.student import Student
 from scr.exceptions import StudentNotFoundException, DuplicateStudentException,  emptyStudentListException
-from typing import List, Optional, Callable
+from typing import List, Optional, Callable, Any
 from scr.base_repository import BaseRepository
 from scr.logger import Logger
 
@@ -101,10 +101,10 @@ class StudentManager:
             "passing_rate" : passing_rate
         }
         
-    def get_ranking(self) -> List[Student]:
+    def get_sorted_students(self, sort_key: Callable[[Student], Any], reverse: bool = False) -> List[Student]:
         self._validate_empty_student_list()
-        sorted_students = sorted(self.students, key=lambda student: student.average_score, reverse=True)
-        return sorted_students
+        return sorted(self.students, key=sort_key, reverse=reverse)
+        
     
     def search_student_by_name(self, query: str) -> List[Student]:
         query = query.lower()
