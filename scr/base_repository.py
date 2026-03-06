@@ -10,3 +10,7 @@ class BaseRepository(ABC):
     @abstractmethod
     def save_students(self, students_list: list[Student]) -> None:
         pass
+
+    @abstractmethod
+    def export_to_csv(self, students, filename: str) -> None:
+        pass

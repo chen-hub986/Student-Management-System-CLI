@@ -196,6 +196,16 @@ def class_statistics_menu(students_manager):
         else:
             print("無效的選項，請重新輸入！")
 
+@MenuErrorHandler
+def export_to_csv(students_manager):
+    print("\n準備匯出資料...")
+
+    students_manager.export_to_csv()
+
+    print("資料已成功匯出至 'students.csv'!")
+    print("小提示：你可以直接在資料夾找到它，並用 Excel 或 VS Code 打開查看。")
+    print("-" * 35)
+
 
 def main():
     Logger().log_info("學生管理系統啟動")
@@ -210,8 +220,9 @@ def main():
         print("4. 修改學生資料")
         print("5. 列出優等生或搜尋學生")
         print("6. 班級統計報告頁面")
-        print("7. 退出程式")
-        choice = input("請輸入選項（1-7）：")
+        print("7. 匯出成.csv")
+        print("8. 退出程式")
+        choice = input("請輸入選項（1-8）：")
         
         if choice == '1':
             student_add(students_manager)
@@ -226,6 +237,8 @@ def main():
         elif choice == '6':
             class_statistics_menu(students_manager)
         elif choice == '7':
+            export_to_csv(students_manager)
+        elif choice == '8':
             print("退出程式。")
             Logger().log_info("學生管理系統關閉")
             break

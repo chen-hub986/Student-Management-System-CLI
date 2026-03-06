@@ -1,5 +1,6 @@
 import json
 import os
+import csv
 
 from scr.student import Student
 from typing import List
@@ -29,3 +30,17 @@ class StudentRepository(BaseRepository):
                 ensure_ascii=False,
                 indent=4
             )
+    
+    def export_to_csv(self, students: List[Student], filename: str) -> None:
+        with open(filename, 'w', newline='', encoding='utf-8-sig') as file:
+            writer = csv.writer(file)
+            writer.writerow(["學生姓名", "平均成績", "各科原始成績"])
+
+            for student in students:
+                score_str = ", ".join(f"{score:.1f}" for score in student.scores)
+
+                writer.writerow([
+                    student.name,
+                    f"{student.average_score:.2f}",
+                    score_str
+                ])

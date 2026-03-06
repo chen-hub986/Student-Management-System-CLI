@@ -12,7 +12,7 @@ class StudentManager:
         self.logger = logger
 
     def save_students(self) -> None:
-        self.repository.save_students(self.students)
+        self.repository.save_students(self.students) 
 
     def find_student(self, name: str) -> Student:
         for student in self.students:
@@ -115,3 +115,9 @@ class StudentManager:
     def filter_students(self, criteria: Callable[[Student], bool]) ->List[Student]:
         return list(filter(criteria, self.students))
     
+    def export_to_csv(self, filename: str = 'students.csv') -> None:
+        self._validate_empty_student_list()
+
+        self.repository.export_to_csv(self.students, filename)
+
+        self.logger.log_info(f"成功將學生資料匯出至 {filename}")

@@ -16,6 +16,13 @@ class InMemoryRepository(BaseRepository):
 
     def save_students(self, students_list: list[Student]) -> None:
         self.students = students_list
+    
+    def export_to_csv(self, students: list[Student], filename: str) -> None:
+        """
+        Mock implementation for testing.
+        在單元測試中，我們不需要真的把檔案寫入硬碟，所以使用 pass 即可。
+        """
+        pass
 
 @pytest.fixture
 def students_manager():
