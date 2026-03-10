@@ -1,19 +1,19 @@
 from functools import wraps
 from typing import Any
 from scr.logger import Logger
-from scr.exceptions import StudentNotFoundException, DuplicateStudentException, emptyStudentListException, InvalidScoreException
+from scr.exceptions import StudentNotFoundException, DuplicateStudentException, EmptyStudentListException, InvalidScoreException
 
 
 class MenuErrorHandler:
     def __init__(self, func):
-        wraps(func)
+        wraps(func)(self)
         self.func = func
         self.Logger = Logger()
 
     def __call__(self, *args: Any, **kwds: Any) -> Any:
         try:
             return self.func(*args, **kwds)
-        except (emptyStudentListException, StudentNotFoundException,
+        except (EmptyStudentListException, StudentNotFoundException,
                 DuplicateStudentException, InvalidScoreException) as e:
             self.Logger.log_error(str(e))
         except ValueError:

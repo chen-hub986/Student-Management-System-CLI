@@ -1,6 +1,6 @@
 from scr.manager import StudentManager
 from scr.student import Student
-from scr.exceptions import StudentNotFoundException, DuplicateStudentException, InvalidScoreException, emptyStudentListException
+from scr.exceptions import StudentNotFoundException, DuplicateStudentException, InvalidScoreException, EmptyStudentListException
 from scr.base_repository import BaseRepository
 from scr.logger import Logger
 
@@ -99,7 +99,7 @@ def test_get_ranking(students_manager):
     assert ranking[2].name == "David"
 
 def test_get_ranking_empty(students_manager):
-    with pytest.raises(emptyStudentListException):
+    with pytest.raises(EmptyStudentListException):
         students_manager.get_sorted_students(sort_key=lambda s: s.average_score)
 
 def test_get_sorted_students_by_name(students_manager):

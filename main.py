@@ -2,6 +2,7 @@ from scr.manager import StudentManager
 from scr.repository import StudentRepository
 from scr.logger import Logger
 from scr.decorators import MenuErrorHandler
+from scr.exceptions import InvalidScoreException
 
 
 def display_welcome_logo():
@@ -26,6 +27,22 @@ def display_welcome_logo():
     print(f"{GREEN}  >>> Powered by Chen a High School Student.{RESET}\n")
 
 
+
+def _print_student_name_list(students_manager):
+    student_list = students_manager.get_students()
+
+    name = [student.name for student in student_list]
+    print(f"學生資料列表: {name}")
+
+
+def _parse_scores(score_input: str) -> list[float]:
+    """將逗號分隔字串解析為分數列表，格式錯誤時統一拋出 InvalidScoreException。"""
+    try:
+        return [float(s.strip()) for s in score_input.split(',')]
+    except ValueError:
+        raise InvalidScoreException("成績輸入無效，請確保成績是數字並用逗號分隔。")
+
+
 @MenuErrorHandler
 def student_add(students_manager):
     while True:
@@ -37,9 +54,9 @@ def student_add(students_manager):
 
         if name.lower() == 'q':
             break
-                
+
         score = input("請輸入學生的成績（用逗號分隔）：")
-        scores = [float(s.strip()) for s in score.split(',')]
+        scores = _parse_scores(score)
         students_manager.add_student(name, scores)
     
 @MenuErrorHandler
@@ -88,9 +105,8 @@ def sorting_menu(students_manager):
 
 @MenuErrorHandler
 def delete_student(students_manager):
-    students_manager.get_students()
+    _print_student_name_list(students_manager)
 
-    print(f"學生資料列表: {[student.name for student in students_manager.students]}")   
     name = input("請輸入要刪除的學生姓名：")
             
     if not name.strip():
@@ -105,9 +121,8 @@ def delete_student(students_manager):
 
 @MenuErrorHandler
 def modify_student(students_manager):
-    students_manager.get_students()
+    _print_student_name_list(students_manager)
 
-    print(f"學生資料列表: {[student.name for student in students_manager.students]}")
     name = input("請輸入要修改的學生姓名：")
 
     if not name.strip():
@@ -115,11 +130,11 @@ def modify_student(students_manager):
         return
 
     students_manager.find_student(name)
-    
+
     score = input("請輸入新的成績（用逗號分隔）：")
     print(f"正在修改學生 {name} 的資料...")
 
-    scores = [float(s.strip()) for s in score.split(',')]
+    scores = _parse_scores(score)
     update_result = students_manager.modify_student(name, scores)
     if update_result:
         return
@@ -150,7 +165,7 @@ def show_top_students(students_manager):
 
     print("尋找優等生 (平均成績 > 80)...")
 
-    top_students = students_manager.filter_students(lambda s: s.average_score >= 80)
+    top_students = students_manager.filter_students(lambda student: student.average_score >= 80)
 
     if not top_students:
         print("沒有結果。")
@@ -184,19 +199,19 @@ def class_statistics(students_manager):
 
     print("\n統計中...")
 
-    class_statistics = students_manager.get_class_statistics()
+    stats = students_manager.get_class_statistics()
     
     print("\n" + "=" * 35)
     print(f"{'班級統計報告':^30}")
     print("=" * 35)
 
     print("-" * 35)
-    print(f"總人數:{class_statistics['total_students']:>10}人")
-    print(f"全班總平均:{class_statistics['overall_average']:>10.2f}分")
-    print(f"分數中位數:{class_statistics['median']:>10.2f}分")
-    print(f"及格率:{class_statistics['passing_rate']:>10.1f}%")
-    print(f"\n最高平均成績的學生是: {class_statistics['max_student']}，成績為 {class_statistics['max_average_score']:.2f}")
-    print(f"\n最低平均成績的學生是: {class_statistics['min_student']}，成績為 {class_statistics['min_average_score']:.2f}")
+    print(f"總人數:{stats['total_students']:>10}人")
+    print(f"全班總平均:{stats['overall_average']:>10.2f}分")
+    print(f"分數中位數:{stats['median']:>10.2f}分")
+    print(f"及格率:{stats['passing_rate']:>10.1f}%")
+    print(f"\n最高平均成績的學生是: {stats['max_student']}，成績為 {stats['max_average_score']:.2f}")
+    print(f"\n最低平均成績的學生是: {stats['min_student']}，成績為 {stats['min_average_score']:.2f}")
 
     print("-" * 35)
 
@@ -230,10 +245,21 @@ def export_to_csv(students_manager):
 
 
 def main():
-    Logger().log_info("學生管理系統啟動")
     students_repository = StudentRepository('students.json')
     logger = Logger()
     students_manager = StudentManager(students_repository, logger)
+    logger.log_info("學生管理系統啟動")
+
+    menu_actions = {
+        '1': student_add,
+        '2': sorting_menu,
+        '3': delete_student,
+        '4': modify_student,
+        '5': search_filter_menu,
+        '6': class_statistics_menu,
+        '7': export_to_csv,
+    }
+
     while True:
         print("\n選擇操作：")
         print("1. 添加學生資料")
@@ -245,25 +271,15 @@ def main():
         print("7. 匯出成.csv")
         print("8. 退出程式")
         choice = input("請輸入選項（1-8）：")
-        
-        if choice == '1':
-            student_add(students_manager)
-        elif choice == '2':
-            sorting_menu(students_manager)
-        elif choice == '3':
-            delete_student(students_manager)
-        elif choice == '4':
-            modify_student(students_manager)
-        elif choice == '5':
-            search_filter_menu(students_manager)
-        elif choice == '6':
-            class_statistics_menu(students_manager)
-        elif choice == '7':
-            export_to_csv(students_manager)
-        elif choice == '8':
+
+        if choice == '8':
             print("退出程式。")
-            Logger().log_info("學生管理系統關閉")
+            logger.log_info("學生管理系統關閉")
             break
+
+        action = menu_actions.get(choice)
+        if action:
+            action(students_manager)
         else:
             print("無效的選項，請重新輸入！")
 

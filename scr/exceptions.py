@@ -10,7 +10,7 @@ class InvalidScoreException(Exception):
     # This exception is raised when a score is invalid (e.g., negative or above 100).
     pass
 
-class emptyStudentListException(Exception):
+class EmptyStudentListException(Exception):
     # This exception is raised when the student list is empty and an operation requires at least one student.
     pass
 

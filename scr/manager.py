@@ -1,5 +1,5 @@
 from scr.student import Student
-from scr.exceptions import StudentNotFoundException, DuplicateStudentException,  emptyStudentListException
+from scr.exceptions import StudentNotFoundException, DuplicateStudentException,  EmptyStudentListException
 from typing import List, Optional, Callable, Any
 from scr.base_repository import BaseRepository
 from scr.logger import Logger
@@ -26,7 +26,7 @@ class StudentManager:
         
     def _validate_empty_student_list(self) -> None:
         if not self.students:
-            raise emptyStudentListException("沒有學生資料，無法進行操作。")
+            raise EmptyStudentListException("沒有學生資料，無法進行操作。")
         
     def get_students(self):
         self._validate_empty_student_list()
