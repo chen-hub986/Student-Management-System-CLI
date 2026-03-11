@@ -4,6 +4,9 @@ from scr.logger import Logger
 from scr.decorators import MenuErrorHandler
 from scr.exceptions import InvalidScoreException
 
+import sys
+import os
+
 
 def display_welcome_logo():
     # 使用 ANSI Escape Codes 加上綠色 (\033[92m)
@@ -27,12 +30,14 @@ def display_welcome_logo():
     print(f"{GREEN}  >>> Powered by Chen a High School Student.{RESET}\n")
 
 
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 def _print_student_name_list(students_manager):
     student_list = students_manager.get_students()
 
-    name = [student.name for student in student_list]
-    print(f"學生資料列表: {name}")
+    names = [student.name for student in student_list]
+    print(f"學生資料列表: {names}")
 
 
 def _parse_scores(score_input: str) -> list[float]:
@@ -55,8 +60,8 @@ def student_add(students_manager):
         if name.lower() == 'q':
             break
 
-        score = input("請輸入學生的成績（用逗號分隔）：")
-        scores = _parse_scores(score)
+        score_input = input("請輸入學生的成績（用逗號分隔）：")
+        scores = _parse_scores(score_input)
         students_manager.add_student(name, scores)
     
 @MenuErrorHandler
@@ -138,7 +143,7 @@ def modify_student(students_manager):
     update_result = students_manager.modify_student(name, scores)
     if update_result:
         return
-    
+
 @MenuErrorHandler
 def search_students(students_manager):
 
@@ -273,16 +278,23 @@ def main():
         choice = input("請輸入選項（1-8）：")
 
         if choice == '8':
+            clear_screen()
             print("退出程式。")
             logger.log_info("學生管理系統關閉")
             break
 
         action = menu_actions.get(choice)
         if action:
+            clear_screen()
             action(students_manager)
         else:
             print("無效的選項，請重新輸入！")
 
 if __name__ == "__main__":
     display_welcome_logo()
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n程式已被使用者中斷。")
+        Logger().log_info("學生管理系統被使用者中斷")
+        sys.exit(0)
