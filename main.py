@@ -11,10 +11,10 @@ import os
 def display_welcome_logo():
     # 使用 ANSI Escape Codes 加上綠色 (\033[92m)
     # 記得使用 r""" """ 原生字串，避免反斜線被誤認
-    GREEN = "\033[92m"
-    RESET = "\033[0m"
-    BOLD = "\033[1m"
-    
+    green = "\033[92m"
+    reset = "\033[0m"
+    bold = "\033[1m"
+
     logo = r"""
       :::::::: ::::::::::: :::    ::: :::::::::  :::::::::: ::::    ::: ::::::::::: 
     :+:    :+:    :+:     :+:    :+: :+:    :+: :+:        :+:+:   :+:     :+:      
@@ -25,13 +25,14 @@ def display_welcome_logo():
 ########     ###      ########  #########  ########## ###    ####     ###           
     /_/  INTELLIGENT SYSTEM
     """
-    print(f"{GREEN}{BOLD}{logo}{RESET}")
-    print(f"{GREEN}  >>> Student Management System Initialized{RESET}")
-    print(f"{GREEN}  >>> Powered by Chen a High School Student.{RESET}\n")
+    print(f"{green}{bold}{logo}{reset}")
+    print(f"{green}  >>> Student Management System Initialized{reset}")
+    print(f"{green}  >>> Powered by Chen a High School Student.{reset}\n")
 
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
+
 
 def _print_student_name_list(students_manager):
     student_list = students_manager.get_students()
@@ -63,7 +64,8 @@ def student_add(students_manager):
         score_input = input("請輸入學生的成績（用逗號分隔）：")
         scores = _parse_scores(score_input)
         students_manager.add_student(name, scores)
-    
+
+
 @MenuErrorHandler
 def show_students(students_manager):
     students_manager.get_students()
@@ -75,54 +77,57 @@ def show_students(students_manager):
     for student in students_manager.students:
         print(f"{student.name} - 平均成績: {student.average_score:.2f}")
 
+
 @MenuErrorHandler
 def sorting_menu(students_manager):
     while True:
-            print("\n請選擇:")
-            print("1. 依平均成績排序 (高 -> 低) ")
-            print("2. 依平均成績排序 (低 -> 高) ")
-            print("3. 依學生姓名排序 (A -> Z) ")
-            print("4. 依學生姓名排序 (Z -> A) ")
-            print("5. 返回")
-            choice = input("請輸入選項 (1-5) :")
-            
-            if choice == '1':
-                sorted_list = students_manager.get_sorted_students(sort_key = lambda s: s.average_score, reverse = True)
-                sort_title = "成績排序 (高 -> 低)"
-            elif choice == '2':
-                sorted_list = students_manager.get_sorted_students(sort_key = lambda s: s.average_score, reverse = False)
-                sort_title = "成績排序 (低 -> 高)"
-            elif choice == '3':
-                sorted_list = students_manager.get_sorted_students(sort_key = lambda s: s.name.lower(), reverse = False)
-                sort_title = "姓名排序 (A -> Z)"
-            elif choice == '4':
-                sorted_list = students_manager.get_sorted_students(sort_key = lambda s: s.name.lower(), reverse = True)
-                sort_title = "姓名排序 (Z -> A)"
-            elif choice == '5':
-                break
-            else:
-                print("無效的選項，請重新輸入！")
-                continue
+        print("\n請選擇:")
+        print("1. 依平均成績排序 (高 -> 低) ")
+        print("2. 依平均成績排序 (低 -> 高) ")
+        print("3. 依學生姓名排序 (A -> Z) ")
+        print("4. 依學生姓名排序 (Z -> A) ")
+        print("5. 返回")
+        choice = input("請輸入選項 (1-5) :")
 
-            print(f"\n{sort_title}結果：")
-            for rank, student in enumerate(sorted_list, 1):
-                print(f"{rank:>2}. {student.name:<10} - 平均成績: {student.average_score:>6.2f}")
+        if choice == '1':
+            sorted_list = students_manager.get_sorted_students(sort_key=lambda s: s.average_score, reverse=True)
+            sort_title = "成績排序 (高 -> 低)"
+        elif choice == '2':
+            sorted_list = students_manager.get_sorted_students(sort_key=lambda s: s.average_score, reverse=False)
+            sort_title = "成績排序 (低 -> 高)"
+        elif choice == '3':
+            sorted_list = students_manager.get_sorted_students(sort_key=lambda s: s.name.lower(), reverse=False)
+            sort_title = "姓名排序 (A -> Z)"
+        elif choice == '4':
+            sorted_list = students_manager.get_sorted_students(sort_key=lambda s: s.name.lower(), reverse=True)
+            sort_title = "姓名排序 (Z -> A)"
+        elif choice == '5':
+            break
+        else:
+            print("無效的選項，請重新輸入！")
+            continue
+
+        print(f"\n{sort_title}結果：")
+        for rank, student in enumerate(sorted_list, 1):
+            print(f"{rank:>2}. {student.name:<10} - 平均成績: {student.average_score:>6.2f}")
+
 
 @MenuErrorHandler
 def delete_student(students_manager):
     _print_student_name_list(students_manager)
 
     name = input("請輸入要刪除的學生姓名：")
-            
+
     if not name.strip():
         print("請輸入學生姓名!")
         return
-    
+
     students_manager.find_student(name)
 
     print(f"正在刪除學生 {name} 的資料...")
-                
+
     students_manager.delete_student(name)
+
 
 @MenuErrorHandler
 def modify_student(students_manager):
@@ -144,9 +149,9 @@ def modify_student(students_manager):
     if update_result:
         return
 
+
 @MenuErrorHandler
 def search_students(students_manager):
-
     name = input("請輸入學生姓名關鍵字:")
 
     if not name.strip():
@@ -154,7 +159,7 @@ def search_students(students_manager):
         return
 
     search_result = students_manager.search_student_by_name(name)
-    
+
     if not search_result:
         print(f"找不到包含{name}關鍵字的學生。")
         return
@@ -165,9 +170,9 @@ def search_students(students_manager):
             print(f"姓名:{s.name} | 平均成績:{s.average_score:.2f}")
             print("-" * 30)
 
+
 @MenuErrorHandler
 def show_top_students(students_manager):
-
     print("尋找優等生 (平均成績 > 80)...")
 
     top_students = students_manager.filter_students(lambda student: student.average_score >= 80)
@@ -180,6 +185,7 @@ def show_top_students(students_manager):
             print("-" * 30)
             print(f"姓名:{s.name} | 平均成績:{s.average_score:.2f}")
             print("-" * 30)
+
 
 @MenuErrorHandler
 def search_filter_menu(students_manager):
@@ -199,13 +205,13 @@ def search_filter_menu(students_manager):
         else:
             print("無效的選項，請重新輸入！")
 
+
 @MenuErrorHandler
 def class_statistics(students_manager):
-
     print("\n統計中...")
 
     stats = students_manager.get_class_statistics()
-    
+
     print("\n" + "=" * 35)
     print(f"{'班級統計報告':^30}")
     print("=" * 35)
@@ -219,6 +225,7 @@ def class_statistics(students_manager):
     print(f"\n最低平均成績的學生是: {stats['min_student']}，成績為 {stats['min_average_score']:.2f}")
 
     print("-" * 35)
+
 
 @MenuErrorHandler
 def class_statistics_menu(students_manager):
@@ -237,6 +244,7 @@ def class_statistics_menu(students_manager):
             break
         else:
             print("無效的選項，請重新輸入！")
+
 
 @MenuErrorHandler
 def export_to_csv(students_manager):
@@ -289,6 +297,7 @@ def main():
             action(students_manager)
         else:
             print("無效的選項，請重新輸入！")
+
 
 if __name__ == "__main__":
     display_welcome_logo()
