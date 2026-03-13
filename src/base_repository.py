@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from scr.student import Student
+from src.student import Student
 
 
 class BaseRepository(ABC):

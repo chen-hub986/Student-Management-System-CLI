@@ -1,8 +1,8 @@
-from scr.manager import StudentManager
-from scr.student import Student
-from scr.exceptions import StudentNotFoundException, DuplicateStudentException, InvalidScoreException, EmptyStudentListException
-from scr.base_repository import BaseRepository
-from scr.logger import Logger
+from src.manager import StudentManager
+from src.student import Student
+from src.exceptions import StudentNotFoundException, DuplicateStudentException, InvalidScoreException, EmptyStudentListException
+from src.base_repository import BaseRepository
+from src.logger import Logger
 
 import pytest
 

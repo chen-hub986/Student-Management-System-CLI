@@ -2,10 +2,10 @@ import json
 import os
 import csv
 
-from scr.student import Student
+from src.student import Student
 from typing import List
-from scr.base_repository import BaseRepository
-from scr.logger import Logger
+from src.base_repository import BaseRepository
+from src.logger import Logger
 
 
 class StudentRepository(BaseRepository):

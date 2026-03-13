@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from typing import List, Dict, Any
-from scr.exceptions import InvalidScoreException
+from src.exceptions import InvalidScoreException
 
 
 @dataclass

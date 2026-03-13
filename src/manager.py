@@ -1,8 +1,8 @@
-from scr.student import Student
-from scr.exceptions import StudentNotFoundException, DuplicateStudentException, EmptyStudentListException
+from src.student import Student
+from src.exceptions import StudentNotFoundException, DuplicateStudentException, EmptyStudentListException
 from typing import List, Optional, Callable, Any
-from scr.base_repository import BaseRepository
-from scr.logger import Logger
+from src.base_repository import BaseRepository
+from src.logger import Logger
 
 
 class StudentManager:

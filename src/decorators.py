@@ -1,7 +1,7 @@
 from functools import wraps
 from typing import Any
-from scr.logger import Logger
-from scr.exceptions import StudentNotFoundException, DuplicateStudentException, EmptyStudentListException, InvalidScoreException
+from src.logger import Logger
+from src.exceptions import StudentNotFoundException, DuplicateStudentException, EmptyStudentListException, InvalidScoreException
 
 
 class MenuErrorHandler:

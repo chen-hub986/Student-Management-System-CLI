@@ -1,8 +1,8 @@
-from scr.manager import StudentManager
-from scr.repository import StudentRepository
-from scr.logger import Logger
-from scr.decorators import MenuErrorHandler
-from scr.exceptions import InvalidScoreException
+from src.manager import StudentManager
+from src.repository import StudentRepository
+from src.logger import Logger
+from src.decorators import MenuErrorHandler
+from src.exceptions import InvalidScoreException
 
 import sys
 import os
